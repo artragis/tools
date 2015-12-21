@@ -112,6 +112,10 @@ def get_dest(msg, orig_to):
     # Cc
     if msg.get('cc') is not None and '@' in msg.get('cc'):
         dest.extend(msg.get_all('cc'))
+    # bCc
+    if msg.get('bcc') is not None and '@' in msg.get('bcc'):
+        dest.extend(msg.get_all('bcc'))
+
 
     # If To or Cc, decode them
     if len(dest) != 0:
@@ -119,7 +123,7 @@ def get_dest(msg, orig_to):
 
     # If no To nor Cc, we look for recipient into the received
     if orig_to is None:
-        for rcvd in msg.get_all('Received'):
+        for rcvd in msg.get_all('Received', []):
             dest.extend(addr_rgx.findall(rcvd, re.IGNORECASE))
     else:
         dest.extend(orig_to)
